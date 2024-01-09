@@ -26,6 +26,12 @@ class DrawerModel extends Database
         return $this->createUpdateDelete($query, $params);
     }
 
+    public function updateClothingData($data)
+    {
+        $query = "UPDATE clothing_drawer SET drawer = ? WHERE clothing = ?";
+        $params = [$data['drawer'], $data['clothing']];
+        return $this->createUpdateDelete($query, $params);
+    }
     public function getControllerData($id)
     {
         if ($id == "") {
@@ -46,6 +52,15 @@ class DrawerModel extends Database
         return $this->createUpdateDelete($query, $params);
 
     }
+
+    public function updateDrawerName($data)
+    {
+        $query = "UPDATE drawer SET name = ? WHERE serial_id = ?";
+        $params = [$data['name'], $data['serial_id']];
+        return $this->createUpdateDelete($query, $params);
+
+    }
+
 
     public function deleteDrawerData($data)
     {

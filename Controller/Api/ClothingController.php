@@ -93,6 +93,7 @@ class ClothingController extends BaseController
                     $responseHeader = 'HTTP/1.1 500 Internal Server Error';
                 }
                 break;
+            
         }
         $responseData = $this->buildResponse($result, $strErrorDesc);
         $this->sendOutput(
@@ -101,6 +102,9 @@ class ClothingController extends BaseController
         );
 
     }
+    
+
+
     public function list()
     {
         $requestMethod = strtoupper($_SERVER["REQUEST_METHOD"]);

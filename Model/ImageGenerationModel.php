@@ -177,4 +177,50 @@ class ImageGenerationModel
 
     }
 
+    public function getOutfitSuggestion($prompt)
+    {
+        $endpoint = DB_HOST . ":" . LANGUAGE_MODEL_PORT . "/v1/chat/completions";
+
+        $postDataJson = array(
+            'messages' =>
+                array(
+                    0 =>
+                        array(
+                            'role' => 'user',
+                            'content' => $prompt,
+                        ),
+                ),
+            'mode' => 'instruct',
+            'instruction_template' => '1OutfitCreator',
+            'temperature' => 1.31,
+            'top_p' => 0.14,
+            'repetition_penalty' => 1.17,
+            'top_k' => 49,
+        );
+        // Initialize cURL session
+        $ch = curl_init($endpoint);
+
+        // Set cURL options
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postDataJson));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+
+        // Execute cURL session and get the response
+        $response = curl_exec($ch);
+
+        // Check for cURL errors
+        if (curl_errno($ch)) {
+            echo 'Curl error: ' . curl_error($ch);
+        }
+
+        // Close cURL session
+        curl_close($ch);
+
+        $jsonMap = json_decode($response, true);
+
+        return $jsonMap['choices'][0]['message']['content'];
+
+    }
+
 }

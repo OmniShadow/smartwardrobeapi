@@ -62,10 +62,7 @@ class ImageGenerationController extends BaseController
         }
 
         $this->sendOutput(
-            '{
-                "data" :' . '"' . $imageBase64 . '"' . ',
-                "error" :' . '"' . $strErrorDesc . '"' . '
-            }',
+            '{"data" :' . '"' . $imageBase64 . '"' . ',"error" :' . '"' . $strErrorDesc . '"' . '}',
             array('Content-Type: application/json', $responseHeader)
         );
 
@@ -137,6 +134,39 @@ class ImageGenerationController extends BaseController
                 break;
         }
         $responseData = $this->buildResponse($suggestionMap, $strErrorDesc);
+        $this->sendOutput(
+            json_encode($responseData),
+            array('Content-Type: application/json', $responseHeader)
+        );
+    }
+
+    public function outfitsuggestion()
+    {
+
+        $requestMethod = strtoupper($_SERVER["REQUEST_METHOD"]);
+        $responseHeader = 'HTTP/1.1 200 OK';
+        $strErrorDesc = '';
+        $suggestionMap = array();
+        $responseData = array();
+
+        switch ($requestMethod) {
+            default:
+                $strErrorDesc = 'Method not supported';
+                $responseHeader = 'HTTP/1.1 422 Unprocessable Entity';
+                break;
+            case 'POST':
+                try {
+                    $json = file_get_contents('php://input');
+                    $suggestion = $this->model->getOutfitSuggestion($json);
+                    
+                    
+                } catch (Error $e) {
+                    $strErrorDesc = $e->getMessage() . 'Something went wrong!';
+                    $responseHeader = 'HTTP/1.1 500 Internal Server Error';
+                }
+                break;
+        }
+        $responseData = $this->buildResponse($suggestion, $strErrorDesc);
         $this->sendOutput(
             json_encode($responseData),
             array('Content-Type: application/json', $responseHeader)

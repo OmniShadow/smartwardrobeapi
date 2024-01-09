@@ -229,6 +229,40 @@ class DrawerController extends BaseController
         );
 
     }
+
+    public function updateclothing()
+    {
+
+        $requestMethod = strtoupper($_SERVER["REQUEST_METHOD"]);
+        $responseData = array();
+        $responseHeader = 'HTTP/1.1 200 OK';
+        $strErrorDesc = '';
+        $result = array();
+
+        switch ($requestMethod) {
+            default:
+                $strErrorDesc = 'Method not supported';
+                $responseHeader = 'HTTP/1.1 422 Unprocessable Entity';
+                break;
+            case 'POST':
+                try {
+                    $json = file_get_contents('php://input');
+                    $data = json_decode($json, true);
+                    $result = $this->model->updateClothingData($data);
+
+                } catch (Error $e) {
+                    $strErrorDesc = $e->getMessage() . 'Something went wrong!';
+                    $responseHeader = 'HTTP/1.1 500 Internal Server Error';
+                }
+                break;
+        }
+        $responseData = $this->buildResponse($result, $strErrorDesc);
+        $this->sendOutput(
+            json_encode($responseData),
+            array('Content-Type: application/json', $responseHeader)
+        );
+
+    }
     public function delete()
     {
 
@@ -248,6 +282,40 @@ class DrawerController extends BaseController
                     $json = file_get_contents('php://input');
                     $data = json_decode($json, true);
                     $result = $this->model->deleteDrawerData($data);
+
+                } catch (Error $e) {
+                    $strErrorDesc = $e->getMessage() . 'Something went wrong!';
+                    $responseHeader = 'HTTP/1.1 500 Internal Server Error';
+                }
+                break;
+        }
+        $responseData = $this->buildResponse($result, $strErrorDesc);
+        $this->sendOutput(
+            json_encode($responseData),
+            array('Content-Type: application/json', $responseHeader)
+        );
+
+    }
+
+    public function name()
+    {
+
+        $requestMethod = strtoupper($_SERVER["REQUEST_METHOD"]);
+        $responseData = array();
+        $responseHeader = 'HTTP/1.1 200 OK';
+        $strErrorDesc = '';
+        $result = array();
+
+        switch ($requestMethod) {
+            default:
+                $strErrorDesc = 'Method not supported';
+                $responseHeader = 'HTTP/1.1 422 Unprocessable Entity';
+                break;
+            case 'POST':
+                try {
+                    $json = file_get_contents('php://input');
+                    $data = json_decode($json, true);
+                    $result = $this->model->updateDrawerName($data);
 
                 } catch (Error $e) {
                     $strErrorDesc = $e->getMessage() . 'Something went wrong!';
